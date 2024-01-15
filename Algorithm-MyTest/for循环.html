@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function test1() {
+            for (var i = 0; i < 10; i++) {
+                console.log(i);
+                if (i > 5) {
+                    return; // 终止
+                }
+            }
+            console.log('return'); // 不执行
+        }
+        function test2() {
+            for (var i = 10; i < 20; i++) {
+                console.log(i);
+                if (i > 15) {
+                    return false; // 终止
+                }
+            }
+            console.log('return false'); // 不执行
+        }
+        function test3() {
+            for (var i = 20; i < 30; i++) {
+                console.log(i);
+                if (i > 25) {
+                    return true; // 终止
+                }
+            }
+            console.log('return true'); // 不执行
+        }
+        test1();
+        test2();
+        test3();
+        function test7() {
+            for (var i = 20; i < 30; i++) {
+                console.log(i);
+                if (i > 25) {
+                    break; // 终止
+                }
+            }
+            console.log('return true'); // 执行
+        }
+        test7();
+        function test4() {
+            forEach
+        }
+        function test5() {
+            for (var i = 10; i < 20; i++) {
+                console.log(i);
+                if (i > 15) {
+                    return false; // 终止
+                }
+            }
+            console.log('return false'); // 不执行
+        }
+        function test6() {
+            for (var i = 20; i < 30; i++) {
+                console.log(i);
+                if (i > 25) {
+                    return true; // 终止
+                }
+            }
+            console.log('return true'); // 不执行
+        }
+        test4();
+        test5();
+        test6();
+    </script>
+</body>
+
+</html>

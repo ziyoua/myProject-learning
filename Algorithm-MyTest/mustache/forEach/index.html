@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //for和forEach的区别
+
+        // foreach()不能使用break和continue这两个关键字，它实现break效果可以通过抛出异常的方式，实现continue的效果可以直接使用return。
+        // forEach的优势就是，它传入的是一个回调函数，因此形成了一个作用域，它内部所定义的变量不会像for循环一样污染全局变量。
+        // forEach()本身无法跳出循环，必须遍历所有的数据才能结束。
+
+        // for方法跳出循环------break跳出循环 continue跳过当次循环
+        function test1() {
+            for (var i = 1; i < 5; i++) {
+                console.log(i);
+                if (i > 1) {
+                    console.log('i>1');
+                    return; // 终止function操作
+                }
+                console.log('return'); // 执行一次
+            }
+            console.log('test1'); // 不执行
+        }
+        function test2() {
+            for (var i = 1; i < 5; i++) {
+                console.log(i);
+                if (i > 1) {
+                    console.log('i>1');
+                    continue; // 跳出当次循环
+                }
+                console.log('continue'); // 执行一次
+            }
+            console.log('test2'); // 执行
+        }
+        function test3() {
+            for (var i = 1; i < 5; i++) {
+                console.log(i);
+                if (i > 1) {
+                    console.log('i>1');
+                    break; // 跳出循环
+                }
+                console.log('break'); // 执行一次
+            }
+            console.log('test3'); // 执行
+        }
+        // forEach方法跳出循环------通过抛出异常的方式跳出循环,通过return跳过当次循环
+        function test4() {
+            var arr = [1, 2, 3, 4, 5];
+            arr.forEach(i => {
+                console.log(i);
+                if (i > 1) {
+                    console.log('i>1')
+                    return; // 跳出当次循环，效果等同于for里面使用continue
+                }
+                console.log('return'); // 执行一次
+            });
+            console.log('test4'); // 执行
+        }
+        function test5() {
+            var arr = [1, 2, 3, 4, 5];
+            try {
+                arr.forEach(i => {
+                    console.log(i);
+                    if (i > 1) {
+                        console.log('i>1')
+                        throw Error(); // 跳出循环,并终止所有操作
+                    }
+                    console.log('Error'); // 执行一次
+                });
+                console.log('test5'); // 不执行
+            } catch (e) {
+                console.log('catch'); // 执行一次
+            }
+        }
+        // test1();
+        // test2();
+        // test3();
+        // test4();
+        test5();
+    </script>
+</body>
+
+</html>

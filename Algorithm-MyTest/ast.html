@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var ast = {
+            tag: 'div',
+            attrs: [{ name: 'class', value: 'aa bb cc' }, { name: 'id', value: 'myId' }],
+            children: [
+                {
+                    tag: 'ul',
+                    attrs: [],
+                    children: [
+                        {
+                            tag: 'li',
+                            attrs: [],
+                            children: [
+                                { text: 'AAA', type: 3 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+        var templateStr = `<div class="aa bb cc" id="myId"><ul><li>AAA</li><li>BBB</li><li>CCC</li></ul></div>`
+        var startRegExp = /^\<([a-z]+[1-6]?)(\s[^\<]+)?\>/; // <div class="aa bb cc" id="myId">
+        var endRegExp = /^\<\/([a-z]+[1-6]?)\>/; // </li>
+        var wordRegExp = /^([^\<]+)\<\/[a-z]+[1-6]?\>/; // AAA
+        var attrRegExp = /^(.+)="(.+)"$/; // class="aa bb cc"
+        var blankRegExp = /^\s*$/; // 匹配多次空白字符
+        function parse(str) {
+            let tail = str;
+            let result = []
+            const stack_ast = [];
+            let collector = result;
+            let regArr = [];
+            while (tail.length > 0) {
+                if (startRegExp.test(tail)) {
+                    regArr = tail.match(startRegExp);
+                    const item = {
+                        tag: regArr[1],
+                        attrs: parseAttrsString(regArr[2]),
+                        children: []
+                    };
+                    collector.push(item);
+                    stack_ast.push(item);
+                    collector = collector[collector.length - 1].children;
+                    tail = tail.substring(regArr[0].length);
+                } else if (wordRegExp.test(tail)) {
+                    regArr = tail.match(wordRegExp);
+                    collector.push({ text: regArr[1], type: 3 })
+                    tail = tail.substring(regArr[1].length);
+                } else if (endRegExp.test(tail)) {
+                    regArr = tail.match(endRegExp);
+                    stack_ast.pop();
+                    collector = stack_ast.length > 0 ? stack_ast[stack_ast.length - 1].children : result;
+                    tail = tail.substring(regArr[0].length);
+                }
+            }
+            console.log('result', result[0]);
+        }
+        function parseAttrsString(attrs) {
+            if (!attrs) {
+                return [];
+            }
+            let str = attrs.trim();
+            let pos = 0;
+            let attrArr = [];
+            let words = '';
+            let isInner = false;
+            while (pos < str.length) {
+                if (str[pos] === '"') {
+                    words += '"';
+                    if (isInner) {
+                        isInner = false;
+                        attrArr.push(words);
+                        words = '';
+                    } else {
+                        isInner = true;
+                    }
+                    pos++;
+                }
+                if (blankRegExp.test(str[pos])) {
+                    if (isInner) {
+                        words += ' ';
+                    }
+                } else {
+                    words += str[pos];
+                }
+                pos++;
+            }
+            return attrArr.map(item => {
+                let temp = item.match(attrRegExp);
+                return { name: temp[1], value: temp[2] }
+            })
+        }
+        parse(templateStr)
+    </script>
+</body>
+
+</html>
